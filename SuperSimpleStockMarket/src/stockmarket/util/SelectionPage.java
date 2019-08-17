@@ -79,7 +79,7 @@ public class SelectionPage {
 			boolean isTradeSuccess = StockService.getInstance().recordTrade(stock, quantityOfShare, 
 					buySellIndicator, price);
 			System.out.println("---------------------------------------");
-			System.out.println("\n Is Trade Successful : " +isTradeSuccess);
+			System.out.println("\n Is Trade Successful ? : " +isTradeSuccess);
 			System.out.println("---------------------------------------\n");
 			showAndSelectOptions(scanner);
 			
@@ -92,6 +92,10 @@ public class SelectionPage {
 			showAndSelectOptions(scanner);
 			break;
 		case "5":
+			String meanOfPrices = StockService.getInstance().getMeanOfPrices();
+			System.out.println("---------------------------------------");
+			System.out.println("\n GBCE All Share Index using the geometric mean of prices for all stocks : " +meanOfPrices);
+			System.out.println("---------------------------------------\n");
 			showAndSelectOptions(scanner);
 			break;
 		default:

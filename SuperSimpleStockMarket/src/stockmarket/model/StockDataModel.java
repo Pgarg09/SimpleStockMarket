@@ -7,6 +7,7 @@ public class StockDataModel {
 	private double lastDividend;
 	private int fixedDividend;
 	private int perValue;
+	private double price;
 	
 	public StockDataModel(String stock, String type, double lastDividend, int perValue) {
 		super();
@@ -45,9 +46,12 @@ public class StockDataModel {
 		return perValue;
 	}
 
-	
-	
-	
+	public double getPrice() {
+		return price;
+	}
 
+	public void setPrice(double price) {
+		this.price = price;
+	}
 	
 }
