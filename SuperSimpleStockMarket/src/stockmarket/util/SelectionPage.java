@@ -63,7 +63,7 @@ public class SelectionPage {
 			listStockOptions();
 			stock = selectStock(scanner);
 			price = inputPriceAndValidate(scanner);
-			String pByERatio = StockService.getInstance().CalculatePERatio(stock, price);
+			String pByERatio = StockService.getInstance().calculatePERatio(stock, price);
 			System.out.println("---------------------------------------");
 			System.out.println("\n P/E Ratio is : " +pByERatio);
 			System.out.println("---------------------------------------\n");
@@ -127,7 +127,7 @@ public class SelectionPage {
 			break;
 		default:
 			System.err.println("\nPlease select a Valid Input\n");
-			selectStock(scanner);
+			stock = selectStock(scanner);
 			break;
 		}
 		return stock;
@@ -142,7 +142,7 @@ public class SelectionPage {
 			doubleValue = Double.parseDouble(price);
 		} catch (Exception e) {
 			System.err.println("\nPlease enter a valid Price\n");
-			inputPriceAndValidate(scanner);
+			doubleValue = inputPriceAndValidate(scanner);
 		}
 		return doubleValue;
 		
@@ -157,7 +157,7 @@ public class SelectionPage {
 			intValue = Integer.parseInt(price);
 		} catch (Exception e) {
 			System.err.println("\nPlease enter a valid Quantity\n");
-			inputQuantityAndValidate(scanner);
+			intValue = inputQuantityAndValidate(scanner);
 		}
 		return intValue;
 	}
@@ -174,7 +174,7 @@ public class SelectionPage {
 			break;
 		default:
 			System.err.println("\nPlease select a Valid Input\n");
-			getBuySellIndicator(scanner);
+			buySellIndicator = getBuySellIndicator(scanner);
 			break;
 		}
 		return buySellIndicator;

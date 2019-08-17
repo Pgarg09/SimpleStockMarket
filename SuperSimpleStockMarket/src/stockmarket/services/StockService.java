@@ -39,22 +39,26 @@ public class StockService {
 		StockDataModel dataModel = getStockModelObject(stock);
 		if(dataModel.getType().equalsIgnoreCase(StockMarketConstant.STOCK_TYPE_COMMON)) {
 				dividendValue = Double.parseDouble(df.format(dataModel.getLastDividend()/price));
-				dataModel.setLastDividend(dividendValue);
+				dataModel.setDividend(dividendValue);
 				dataModel.setPrice(price);
 				return dividendValue.toString();
 		} else {
 				dividendValue = Double.parseDouble(df.format((dataModel.getFixedDividend()*dataModel.getPerValue())/price));
-				dataModel.setLastDividend(dividendValue);
+				dataModel.setDividend(dividendValue);
 				dataModel.setPrice(price);
 				return dividendValue.toString();
 		}
 	}
 	
-	public String CalculatePERatio(final String stock, final double price) {
-		
+	public String calculatePERatio(final String stock, final double price) {
 		StockDataModel dataModel = getStockModelObject(stock);
-		dataModel.setPrice(price);
-		return df.format(price/dataModel.getLastDividend());
+		if(dataModel.getDividend()>0) {
+			dataModel.setPrice(price);
+			return df.format(price/dataModel.getDividend());
+		} else {
+			return "Not Available for this stock";
+		}
+		
 	}
 	
 	public boolean recordTrade(final String stock, final int quantity, final String buySell, final double tradePrice) {
