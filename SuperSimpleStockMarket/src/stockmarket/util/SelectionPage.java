@@ -7,7 +7,7 @@ import stockmarket.services.StockService;
 public class SelectionPage {
 	
 	public static void listAllOptions(){
-		System.out.println("Select the following options");
+		System.out.println("Select from the following options");
         System.out.println("*****************************");
         System.out.println("1.  Calculate the dividend yield ");
         System.out.println("2.  Calculate the P/E Ratio");
@@ -18,7 +18,7 @@ public class SelectionPage {
 	}
 	
 	public static void listStockOptions(){
-		System.out.println("Select the following options");
+		System.out.println("Select from the following Stock options");
         System.out.println("*****************************");
         System.out.println("1.  TEA ");
         System.out.println("2.  POP ");
@@ -28,7 +28,7 @@ public class SelectionPage {
 	}
 	
 	public static void listTradeOptions(){
-		System.out.println("Select the following options");
+		System.out.println("Select from the following Trade options");
         System.out.println("*****************************");
         System.out.println("1.  Buy ");
         System.out.println("2.  Sell ");
