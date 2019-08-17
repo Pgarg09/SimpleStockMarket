@@ -27,6 +27,13 @@ public class SelectionPage {
         System.out.println("5.  JOE ");
 	}
 	
+	public static void listTradeOptions(){
+		System.out.println("Select the following options");
+        System.out.println("*****************************");
+        System.out.println("1.  Buy ");
+        System.out.println("2.  Sell ");
+	}
+	
 	public static void showAndSelectOptions(final Scanner scanner) {
 		SelectionPage.listAllOptions();
         String input = scanner.nextLine();
@@ -36,15 +43,15 @@ public class SelectionPage {
 
 	private static void userInputSelection(final String input, final Scanner scanner) {
 		
-		String inputStock;
 		String stock;
 		double price;
+		int quantityOfShare;
+		String buySellIndicator;
 		
 		switch (input) {
 		case "1":
 			listStockOptions();
-			inputStock = scanner.nextLine();
-			stock = selectStock(inputStock, scanner);
+			stock = selectStock(scanner);
 			price = inputPriceAndValidate(scanner);
 			String dividendYield = StockService.getInstance().calculateDividendYield(stock, price);
 			System.out.println("---------------------------------------");
@@ -54,8 +61,7 @@ public class SelectionPage {
 			break;
 		case "2":
 			listStockOptions();
-			inputStock = scanner.nextLine();
-			stock = selectStock(inputStock, scanner);
+			stock = selectStock(scanner);
 			price = inputPriceAndValidate(scanner);
 			String pByERatio = StockService.getInstance().CalculatePERatio(stock, price);
 			System.out.println("---------------------------------------");
@@ -64,9 +70,25 @@ public class SelectionPage {
 			showAndSelectOptions(scanner);
 			break;
 		case "3":
+			listStockOptions();
+			stock = selectStock(scanner);
+			price = inputPriceAndValidate(scanner);
+			quantityOfShare = inputQuantityAndValidate(scanner);
+			listTradeOptions();
+			buySellIndicator = getBuySellIndicator(scanner);
+			boolean isTradeSuccess = StockService.getInstance().recordTrade(stock, quantityOfShare, 
+					buySellIndicator, price);
+			System.out.println("---------------------------------------");
+			System.out.println("\n Is Trade Successful : " +isTradeSuccess);
+			System.out.println("---------------------------------------\n");
 			showAndSelectOptions(scanner);
+			
 			break;
 		case "4":
+			String volWeightedStockPrice = StockService.getInstance().calVolWeightedStockPrice();
+			System.out.println("---------------------------------------");
+			System.out.println("\n Volume Weighted Stock Price based on trades in past 15 minutes : " +volWeightedStockPrice);
+			System.out.println("---------------------------------------\n");
 			showAndSelectOptions(scanner);
 			break;
 		case "5":
@@ -79,9 +101,10 @@ public class SelectionPage {
 		}
 	}
 	
-	private static String selectStock(final String inputStock, final Scanner scanner){
+	private static String selectStock(final Scanner scanner){
 		
 		String stock = null;
+		String inputStock = scanner.nextLine();
 		switch (inputStock) {
 		case "1":
 			stock = StockMarketConstant.STOCK_TEA;
@@ -100,7 +123,7 @@ public class SelectionPage {
 			break;
 		default:
 			System.err.println("\nPlease select a Valid Input\n");
-			selectStock(inputStock, scanner);
+			selectStock(scanner);
 			break;
 		}
 		return stock;
@@ -120,6 +143,40 @@ public class SelectionPage {
 		return doubleValue;
 		
 	}
+	
+	private static int inputQuantityAndValidate(final Scanner scanner){
+		
+		System.out.println("\nEnter Quantity..\n");
+		String price = scanner.nextLine();
+		int intValue=0;
+		try {
+			intValue = Integer.parseInt(price);
+		} catch (Exception e) {
+			System.err.println("\nPlease enter a valid Quantity\n");
+			inputQuantityAndValidate(scanner);
+		}
+		return intValue;
+	}
+	
+	private static String getBuySellIndicator(final Scanner scanner) {
+		
+		String buySellIndicator = null;
+		switch (scanner.nextLine()) {
+		case "1":
+			buySellIndicator = "Buy";
+			break;
+		case "2":
+			buySellIndicator = "Sell";
+			break;
+		default:
+			System.err.println("\nPlease select a Valid Input\n");
+			getBuySellIndicator(scanner);
+			break;
+		}
+		return buySellIndicator;
+	}
+	
+	
 
 
 }
