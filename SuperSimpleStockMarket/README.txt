@@ -1,4 +1,7 @@
-Java Console Based Application.
+Java 8 - Console Based Application.
+
+Main.java is the starting class to make the application UP.
+Then Follow the instructions on the console and navigate through the list of options available. 
 
 For a given stock 
 	  Given Price, Calculate the dividend yield 
