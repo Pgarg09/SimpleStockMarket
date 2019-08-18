@@ -1,7 +1,5 @@
 package stockmarket.model;
 
-import java.security.Timestamp;
-
 public class TradingModel {
 	
 	
