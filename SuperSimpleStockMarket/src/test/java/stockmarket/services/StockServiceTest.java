@@ -30,6 +30,13 @@ public class StockServiceTest {
 			iterator.next().setPrice(10.00);
 		}
 	}
+	
+	@Test
+	public void testGetInstance(){
+		int hashCodeValue1 = StockService.getInstance().hashCode();
+		int hashCodeValue2 = StockService.getInstance().hashCode();
+		assertEquals(hashCodeValue1, hashCodeValue2);
+	}
 
 	@Test(expected = BusinessException.class)
 	public void testCalculateDividendYield_InvalidStock() {
@@ -87,7 +94,7 @@ public class StockServiceTest {
 	}
 	
 	@Test(expected = InvalidValueException.class)
-	public void testRecordTrade_InvalidButSell() {
+	public void testRecordTrade_InvalidBuySell() {
 		StockService service = StockService.getInstance();
 		service.recordTrade("Pop", 12, "Purchase",new Date(), 12.12);
 	}
