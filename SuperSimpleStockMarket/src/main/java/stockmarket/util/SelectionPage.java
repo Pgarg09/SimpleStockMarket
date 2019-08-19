@@ -1,5 +1,6 @@
 package stockmarket.util;
 
+import java.util.Date;
 import java.util.Scanner;
 
 import stockmarket.services.StockService;
@@ -77,7 +78,7 @@ public class SelectionPage {
 			listTradeOptions();
 			buySellIndicator = getBuySellIndicator(scanner);
 			boolean isTradeSuccess = StockService.getInstance().recordTrade(stock, quantityOfShare, 
-					buySellIndicator, price);
+					buySellIndicator, new Date(), price);
 			System.out.println("---------------------------------------");
 			System.out.println("\n Is Trade Successful ? : " +isTradeSuccess);
 			System.out.println("---------------------------------------\n");
@@ -151,10 +152,10 @@ public class SelectionPage {
 	private static int inputQuantityAndValidate(final Scanner scanner){
 		
 		System.out.println("\nEnter Quantity..\n");
-		String price = scanner.nextLine();
+		String quantity = scanner.nextLine();
 		int intValue=0;
 		try {
-			intValue = Integer.parseInt(price);
+			intValue = Integer.parseInt(quantity);
 		} catch (Exception e) {
 			System.err.println("\nPlease enter a valid Quantity\n");
 			intValue = inputQuantityAndValidate(scanner);
@@ -167,10 +168,10 @@ public class SelectionPage {
 		String buySellIndicator = null;
 		switch (scanner.nextLine()) {
 		case "1":
-			buySellIndicator = "Buy";
+			buySellIndicator = StockMarketConstant.BUY_INDICATOR;
 			break;
 		case "2":
-			buySellIndicator = "Sell";
+			buySellIndicator = StockMarketConstant.SELL_INDICATOR;
 			break;
 		default:
 			System.err.println("\nPlease select a Valid Input\n");

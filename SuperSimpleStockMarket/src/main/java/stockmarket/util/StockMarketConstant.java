@@ -9,5 +9,7 @@ public class StockMarketConstant {
 	public static final String STOCK_ALE = "Ale";
 	public static final String STOCK_GIN = "Gin";
 	public static final String STOCK_JOE = "Joe";
+	public static final String BUY_INDICATOR = "Buy";
+	public static final String SELL_INDICATOR = "Sell";
 
 }

@@ -3,9 +3,12 @@ package stockmarket.services;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import stockmarket.exceptions.BusinessException;
+import stockmarket.exceptions.InvalidValueException;
 import stockmarket.model.GBCEDataModelSingleton;
 import stockmarket.model.StockDataModel;
 import stockmarket.model.TradingModel;
@@ -36,7 +39,8 @@ public class StockService {
 	public String calculateDividendYield(final String stock, final double price) {
 		
 		Double dividendValue;
-		StockDataModel dataModel = getStockModelObject(stock);
+		checkValidPrice(price);
+		StockDataModel dataModel = validateAndGetStockModelObj(stock);
 		if(dataModel.getType().equalsIgnoreCase(StockMarketConstant.STOCK_TYPE_COMMON)) {
 				dividendValue = Double.parseDouble(df.format(dataModel.getLastDividend()/price));
 				dataModel.setDividend(dividendValue);
@@ -51,20 +55,27 @@ public class StockService {
 	}
 	
 	public String calculatePERatio(final String stock, final double price) {
-		StockDataModel dataModel = getStockModelObject(stock);
+		checkValidPrice(price);
+		StockDataModel dataModel = validateAndGetStockModelObj(stock);
 		if(dataModel.getDividend()>0) {
 			dataModel.setPrice(price);
 			return df.format(price/dataModel.getDividend());
 		} else {
-			return "Not Available for this stock";
+			dataModel.setPrice(price);
+			return df.format(price/dataModel.getLastDividend());
 		}
 		
 	}
 	
-	public boolean recordTrade(final String stock, final int quantity, final String buySell, final double tradePrice) {
+	public boolean recordTrade(final String stock, final int quantity, final String buySell
+			,final Date time, final double tradePrice) {
+		validateAndGetStockModelObj(stock);
+		checkValidPrice(tradePrice);
+		checkBuySellIndicator(buySell);
+		checkValidQuantity(quantity);
 		TradingModel tradingModel = new TradingModel();
 		tradingModel.setStock(stock).setShareQuantity(quantity).setBuySell(buySell).setTradePrice(tradePrice)
-				.setTradeTime(System.currentTimeMillis());
+				.setTradeTime(time.getTime());
 		tradingModelList.add(tradingModel);
 		return true;
 	}
@@ -72,7 +83,7 @@ public class StockService {
 	public String calVolWeightedStockPrice() {
 		
 		if(!tradingModelList.isEmpty()) {
-			long fifteenMinAgo = System.currentTimeMillis() -FIFTEEN_MINUTES;
+			long fifteenMinAgo = System.currentTimeMillis() - FIFTEEN_MINUTES;
 			List<TradingModel> filterModel = tradingModelList.stream().filter(i->i.getTradeTime()>fifteenMinAgo)
 					.collect(Collectors.toList());
 			if(!filterModel.isEmpty()) {
@@ -85,7 +96,7 @@ public class StockService {
 				return "0.00";
 			}
 		} else {
-			return "0.00";
+			return "0.00";   
 		}
 	}
 	
@@ -98,7 +109,7 @@ public class StockService {
 	}
 	
 	
-	private StockDataModel getStockModelObject(final String stock) {
+	private StockDataModel validateAndGetStockModelObj(final String stock) {
 		StockDataModel stockDataModel = null;
 		switch (stock) {
 		case StockMarketConstant.STOCK_TEA:
@@ -116,11 +127,35 @@ public class StockService {
 		case StockMarketConstant.STOCK_JOE:
 			stockDataModel = GBCEDataModelSingleton.getStockDataModel().get(StockMarketConstant.STOCK_JOE);
 			break;
+		default:
+			throw new BusinessException(stock+ "stock not found. Please select a valid stock");
 		}
-			
 		return stockDataModel;
 			
 	}
+	
+	private void checkValidPrice(final double price) {
+		if(price<0.0) {
+			throw new InvalidValueException(price+" is a negetive value");
+		}
+	}
+	
+	private void checkBuySellIndicator(final String buySellIndicator) {
+		if(buySellIndicator!=StockMarketConstant.BUY_INDICATOR
+				&& buySellIndicator!=StockMarketConstant.SELL_INDICATOR) {
+			throw new InvalidValueException("Trade must be either Buy or Sell");
+		}
+	}
+	
+	private void checkValidQuantity(final int quantity) {
+		if(quantity<0) {
+			throw new InvalidValueException(quantity+" is a negetive value");
+		}
+	}
 
+	public List<TradingModel> getTradingModelList() {
+		return tradingModelList;
+	}
+	
 }
 
